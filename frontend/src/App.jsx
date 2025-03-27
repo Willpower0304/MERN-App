@@ -9,6 +9,29 @@ function App() {
   const [pendingDelete, setPendingDelete] = useState(null)
 
   useEffect(() => {
+    // Add styles to head
+    const style = document.createElement('style');
+    style.textContent = `
+      input:hover {
+        background-color: #333333 !important;
+        border-color: #e0e0e0 !important;
+      }
+      
+      input:focus {
+        outline: none !important;
+        border-color: #9c27b0 !important;
+        box-shadow: 0 0 0 2px rgba(156, 39, 176, 0.2) !important;
+      }
+    `;
+    document.head.appendChild(style);
+
+    // Cleanup on unmount
+    return () => {
+      document.head.removeChild(style);
+    };
+  }, []);
+
+  useEffect(() => {
     fetch(`${BACKEND_URL}/products`)
       .then((res) => res.json())
       .then((data) => {
@@ -67,7 +90,9 @@ function App() {
 
   return (
     <div>
-      <h1 style={{ textAlign: 'center', fontSize: '34px' }}>Lista de Productos</h1>
+    <div style={{ backgroundColor: '#202020', display: 'flex', justifyContent: 'center', width: '100%', padding: '20px', borderBottom: '1px solid #333', marginBottom: '3rem'}}>
+      <h1 style={{ textAlign: 'center', fontSize: '34px', color: '#ABABAB'}}>Lista de Productos</h1>
+    </div>
 
       { /* form of products */ }
       <form onSubmit={async (e) => {
@@ -90,7 +115,19 @@ function App() {
         e.target.reset();
         setToastMessage('Producto agregado exitosamente');
         setShowToast(true);
-      }} style={{ margin: '10px', padding: '10px', borderRadius: '5px', justifyContent: 'center', display: 'flex' }}>
+      }} style={{ 
+        margin: '10px', 
+        padding: '10px', 
+        borderRadius: '5px', 
+        justifyContent: 'center', 
+        display: 'flex',
+        flexWrap: 'wrap',
+        gap: '10px',
+        '@media (max-width: 768px)': {
+          flexDirection: 'column',
+          alignItems: 'stretch'
+        }
+      }}>
         <input required type="text" placeholder="Nombre" style={{ 
           color: '#fff',
           backgroundColor: '#292929',
@@ -99,7 +136,12 @@ function App() {
           border: '2px solid #333',
           borderRadius: '8px',
           boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-          fontSize: '16px'
+          fontSize: '16px',
+          transition: 'all 0.3s ease',
+          '@media (max-width: 768px)': {
+            margin: '5px 0',
+            width: '100%'
+          }
         }} />
         <input required type="number" placeholder="Precio" step="0.01" style={{ 
           color: '#fff',
@@ -109,9 +151,14 @@ function App() {
           border: '2px solid #333',
           borderRadius: '8px',
           boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-          fontSize: '16px'
+          fontSize: '16px',
+          transition: 'all 0.3s ease',
+          '@media (max-width: 768px)': {
+            margin: '5px 0',
+            width: '100%'
+          }
         }} />
-        <input  type="text" placeholder="Descripcion" style={{ 
+        <input type="text" placeholder="Descripcion" style={{ 
           color: '#fff',
           backgroundColor: '#292929',
           margin: '10px',
@@ -119,7 +166,12 @@ function App() {
           border: '2px solid #333',
           borderRadius: '8px',
           boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-          fontSize: '16px'
+          fontSize: '16px',
+          transition: 'all 0.3s ease',
+          '@media (max-width: 768px)': {
+            margin: '5px 0',
+            width: '100%'
+          }
         }} />
         <button type="submit" style={{ 
           margin: '10px',
@@ -130,6 +182,14 @@ function App() {
           border: 'none',
           borderRadius: '8px',
           cursor: 'pointer',
+          transition: 'all 0.3s ease',
+          ':hover': {
+            background: '#1a1a1a'
+          },
+          '@media (max-width: 768px)': {
+            margin: '5px 0',
+            width: '100%'
+          }
         }} >Agregar Producto</button>
       </form>
 
@@ -140,7 +200,12 @@ function App() {
         gap: '20px',
         padding: '20px',
         maxWidth: '1200px',
-        margin: '0 auto'
+        margin: '0 auto',
+        '@media (max-width: 768px)': {
+          gridTemplateColumns: '1fr',
+          padding: '10px',
+          gap: '15px'
+        }
       }}>
         {products.map(product => {
           return (
